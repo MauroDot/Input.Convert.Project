@@ -2291,6 +2291,7 @@ MonoBehaviour:
   - {fileID: 547960046}
   _crateCollider: {fileID: 147778362}
   _interactableZone: {fileID: 197238855}
+  _brakeOff: []
 --- !u!65 &147778362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3267,6 +3268,7 @@ MonoBehaviour:
   _requiredID: 5
   _displayMessage: Break the Crate
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 21300000, guid: 88841726d7ebbfc46bf799ee1bfb7d3f, type: 3}
   _zoneKeyInput: 101
   _keyState: 0
@@ -8651,6 +8653,7 @@ MonoBehaviour:
   _displayMessage: Place C4
   _zoneItems:
   - {fileID: 758722189}
+  _inZone: 0
   _inventoryIcon: {fileID: 21300000, guid: 8e46bcb2f14d4d144b9e4a395b47efa2, type: 3}
   _zoneKeyInput: 101
   _keyState: 0
@@ -10772,8 +10775,9 @@ MonoBehaviour:
   _requiredID: 1
   _displayMessage: Denotate C4
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 21300000, guid: 88841726d7ebbfc46bf799ee1bfb7d3f, type: 3}
-  _zoneKeyInput: 32
+  _zoneKeyInput: 101
   _keyState: 0
   _marker: {fileID: 1331263896}
 --- !u!1001 &565131287
@@ -13207,7 +13211,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.959117e-39, y: 2.2026165e-19, z: 2.2e-44, w: 5.326459e-39}
+  m_BoundingSphereOverride: {x: 0, y: NaN, z: 0, w: -3249.213}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -15433,6 +15437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _progressBar: {fileID: 2107796545}
   _hackTime: 5
+  _comepletedHack: 0
   _cameras:
   - {fileID: 1329677325}
   - {fileID: 702883517}
@@ -18263,6 +18268,7 @@ MonoBehaviour:
   _requiredID: 6
   _displayMessage: Reset
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 0}
   _zoneKeyInput: 101
   _keyState: 0
@@ -18393,7 +18399,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972744894}
-  m_LocalRotation: {x: 0.22151063, y: 0.046358682, z: -0.01054308, w: 0.97399837}
+  m_LocalRotation: {x: 0.2215197, y: 0.045513824, z: -0.010350938, w: 0.9740382}
   m_LocalPosition: {x: -0.48177326, y: 4.5286655, z: -4.833789}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25244,6 +25250,7 @@ MonoBehaviour:
   _zoneItems:
   - {fileID: 474256985}
   - {fileID: 908574055}
+  _inZone: 0
   _inventoryIcon: {fileID: 21300000, guid: 81dff3a1ca824714aae965897edd2351, type: 3}
   _zoneKeyInput: 101
   _keyState: 0
@@ -26556,6 +26563,7 @@ MonoBehaviour:
   _requiredID: 4
   _displayMessage: Drive Forklift
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 21300000, guid: 88841726d7ebbfc46bf799ee1bfb7d3f, type: 3}
   _zoneKeyInput: 101
   _keyState: 0
@@ -36038,6 +36046,7 @@ MonoBehaviour:
   _requiredID: 3
   _displayMessage: Fly Drone
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 0}
   _zoneKeyInput: 101
   _keyState: 0
@@ -39790,6 +39799,7 @@ MonoBehaviour:
   _requiredID: 2
   _displayMessage: Hack Cameras
   _zoneItems: []
+  _inZone: 0
   _inventoryIcon: {fileID: 0}
   _zoneKeyInput: 101
   _keyState: 1
