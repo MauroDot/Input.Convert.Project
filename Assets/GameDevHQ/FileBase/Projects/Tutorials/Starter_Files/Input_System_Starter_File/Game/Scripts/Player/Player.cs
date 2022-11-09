@@ -4,7 +4,7 @@ using UnityEngine;
 using Game.Scripts.LiveObjects;
 using Cinemachine;
 
-namespace Game.Scripts.Player
+namespace Game.Scripts.PlayerNM
 {
     [RequireComponent(typeof(CharacterController))]
     public class Player : MonoBehaviour
@@ -22,7 +22,11 @@ namespace Game.Scripts.Player
         [SerializeField]
         private GameObject _model;
 
-
+        public PlayerControls Controls;
+        private void Awake()
+        {
+            Controls = new PlayerControls();
+        }
         private void OnEnable()
         {
             InteractableZone.onZoneInteractionComplete += InteractableZone_onZoneInteractionComplete;
@@ -33,7 +37,8 @@ namespace Game.Scripts.Player
             Forklift.onDriveModeEntered += HidePlayer;
             Drone.OnEnterFlightMode += ReleasePlayerControl;
             Drone.onExitFlightmode += ReturnPlayerControl;
-        } 
+            Controls.Enable();
+        }
 
         private void Start()
         {
@@ -58,12 +63,11 @@ namespace Game.Scripts.Player
         private void CalcutateMovement()
         {
             _playerGrounded = _controller.isGrounded;
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
 
-            transform.Rotate(transform.up, h);
+            Vector2 movementInput = Controls.Default.Movement.ReadValue<Vector2>();
+            transform.Rotate(transform.up, movementInput.x);
 
-            var direction = transform.forward * v;
+            var direction = transform.forward * movementInput.y;
             var velocity = direction * _speed;
 
 
@@ -76,14 +80,14 @@ namespace Game.Scripts.Player
             {
                 velocity.y += -20f * Time.deltaTime;
             }
-            
-            _controller.Move(velocity * Time.deltaTime);                      
+
+            _controller.Move(velocity * Time.deltaTime);
 
         }
 
         private void InteractableZone_onZoneInteractionComplete(InteractableZone zone)
         {
-            switch(zone.GetZoneID())
+            switch (zone.GetZoneID())
             {
                 case 1: //place c4
                     _detonator.Show();
@@ -111,7 +115,7 @@ namespace Game.Scripts.Player
         {
             _model.SetActive(false);
         }
-               
+
         private void TriggerExplosive()
         {
             _detonator.TriggerExplosion();
@@ -127,6 +131,7 @@ namespace Game.Scripts.Player
             Forklift.onDriveModeEntered -= HidePlayer;
             Drone.OnEnterFlightMode -= ReleasePlayerControl;
             Drone.onExitFlightmode -= ReturnPlayerControl;
+            Controls.Disable();
         }
 
     }
