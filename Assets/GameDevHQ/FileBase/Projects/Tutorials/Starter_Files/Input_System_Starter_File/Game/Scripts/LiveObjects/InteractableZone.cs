@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Game.Scripts.UI;
+using Game.Scripts.PlayerNM;
 
 
 namespace Game.Scripts.LiveObjects
@@ -22,6 +23,8 @@ namespace Game.Scripts.LiveObjects
             PressHold
         }
 
+        private Player player_instance;
+
         [SerializeField]
         private ZoneType _zoneType;
         [SerializeField]
@@ -33,7 +36,7 @@ namespace Game.Scripts.LiveObjects
         private string _displayMessage;
         [SerializeField]
         private GameObject[] _zoneItems;
-        private bool _inZone = false;
+        public bool _inZone = false;
         private bool _itemsCollected = false;
         private bool _actionPerformed = false;
         [SerializeField]
@@ -49,27 +52,45 @@ namespace Game.Scripts.LiveObjects
 
         private static int _currentZoneID = 0;
         public static int CurrentZoneID
-        { 
-            get 
-            { 
-               return _currentZoneID; 
+        {
+            get
+            {
+                return _currentZoneID;
             }
             set
             {
-                _currentZoneID = value; 
-                         
+                _currentZoneID = value;
+
             }
         }
 
 
         public static event Action<InteractableZone> onZoneInteractionComplete;
-        public static event Action<int> onHoldStarted;
-        public static event Action<int> onHoldEnded;
+        public static event Action<int, float> onHoldStarted;
+        public static event Action<int> onBeingHealdDOwn;
+        public static event Action<int, float> onHoldEnded;
+        public static event Action<float> onHoldEndedButCooler;
 
         private void OnEnable()
         {
             InteractableZone.onZoneInteractionComplete += SetMarker;
 
+
+        }
+
+        private void Awake()
+        {
+            player_instance = FindObjectOfType<Player>();
+        }
+        private void Start()
+        {
+            player_instance.Controls.Default.Interact.canceled += Interact_canceled;
+            //Debug.Log(FindObjectOfType<Player>().Controls);
+        }
+
+        private void Interact_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+        {
+            onHoldEndedButCooler?.Invoke(current_time);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -110,7 +131,7 @@ namespace Game.Scripts.LiveObjects
                         _inZone = true;
                         if (_displayMessage != null)
                         {
-                            string message = $"Press the {_zoneKeyInput.ToString()} key to {_displayMessage}.";
+                            string message = $"Hold the {_zoneKeyInput.ToString()} key to {_displayMessage}.";
                             UIManager.Instance.DisplayInteractableZoneMessage(true, message);
                         }
                         else
@@ -120,14 +141,31 @@ namespace Game.Scripts.LiveObjects
             }
         }
 
+        private float maxHold_time = 5;
+        private float current_time;
         private void Update()
         {
-            if (_inZone == true)
+            if (!_inZone) return;
+            if (player_instance.Controls.Default.Interact.IsPressed())
             {
-
-                if (Input.GetKeyDown(_zoneKeyInput) && _keyState != KeyState.PressHold)
+                if (_keyState == KeyState.PressHold)
                 {
-                    //press
+                    current_time += Time.deltaTime;
+                    //Debug.Log(current_time);
+                    if (_keyState == KeyState.PressHold)
+                    {
+                        switch (_zoneType)
+                        {
+                            case ZoneType.HoldAction:
+                                PerformHoldAction();
+                                break;
+                        }
+
+
+                    }
+                }
+                else
+                {
                     switch (_zoneType)
                     {
                         case ZoneType.Collectable:
@@ -149,30 +187,24 @@ namespace Game.Scripts.LiveObjects
                             break;
                     }
                 }
-                else if (Input.GetKey(_zoneKeyInput) && _keyState == KeyState.PressHold && _inHoldState == false)
+
+            }
+            else
+            {
+
+                if (current_time >= maxHold_time)
                 {
-                    _inHoldState = true;
-
-                   
-
-                    switch (_zoneType)
-                    {                      
-                        case ZoneType.HoldAction:
-                            PerformHoldAction();
-                            break;           
+                    if (_keyState == KeyState.PressHold)
+                    {
+                        onHoldEnded?.Invoke(_zoneID, current_time);
                     }
                 }
 
-                if (Input.GetKeyUp(_zoneKeyInput) && _keyState == KeyState.PressHold)
-                {
-                    _inHoldState = false;
-                    onHoldEnded?.Invoke(_zoneID);
-                }
+                current_time = 0;
 
-               
             }
         }
-       
+
         private void CollectItems()
         {
             foreach (var item in _zoneItems)
@@ -204,7 +236,7 @@ namespace Game.Scripts.LiveObjects
         private void PerformHoldAction()
         {
             UIManager.Instance.DisplayInteractableZoneMessage(false);
-            onHoldStarted?.Invoke(_zoneID);
+            onHoldStarted?.Invoke(_zoneID, current_time);
         }
 
         public GameObject[] GetItems()
@@ -252,8 +284,8 @@ namespace Game.Scripts.LiveObjects
         private void OnDisable()
         {
             InteractableZone.onZoneInteractionComplete -= SetMarker;
-        }       
-        
+        }
+
     }
 }
 

@@ -26,9 +26,9 @@ namespace Game.Scripts.LiveObjects
         private void InteractableZone_onZoneInteractionComplete(InteractableZone zone)
         {
             if (_c4Placed != true && zone.GetZoneID() == 1) //placed C4
-            {             
+            {
                 PlaceC4(zone.GetItems()[0].transform);
-                _c4Placed = true;                
+                _c4Placed = true;
             }
         }
 

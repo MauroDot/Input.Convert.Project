@@ -8,7 +8,7 @@ namespace Game.Scripts.LiveObjects
     public class C4 : MonoBehaviour
     {
         [SerializeField]
-        private GameObject _explosionPrefab;        
+        private GameObject _explosionPrefab;
         private Collider[] hits = new Collider[5];
 
         public void Explode()
@@ -17,7 +17,7 @@ namespace Game.Scripts.LiveObjects
 
 
             var count = Physics.OverlapSphereNonAlloc(transform.position, 1, hits);
-            
+
             if (count > 0)
             {
                 foreach (var obj in hits)
@@ -29,8 +29,8 @@ namespace Game.Scripts.LiveObjects
                     }
                 }
             }
-            
-            Destroy(this.gameObject);           
+
+            Destroy(this.gameObject);
         }
 
         public void Place(Transform target)
@@ -38,7 +38,7 @@ namespace Game.Scripts.LiveObjects
             this.transform.SetPositionAndRotation(target.position, target.rotation);
             this.transform.parent = null;
         }
-    
+
     }
 }
 
